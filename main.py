@@ -37,10 +37,11 @@ while Action.GameOver not in game.get_available_actions():
 
             write_str = input(
                 "input index you want to write:\n" + ''.join(prompts))
-            write = int(write_str)
+            write = writable[int(write_str)]
             game.write(write)
 
     except Exception as ex:
         print(ex, file=sys.stderr)
 
-print("Final score is ", game)
+status = game.get_status()
+print("Final score is ", status.score)
