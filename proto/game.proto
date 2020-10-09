@@ -53,12 +53,13 @@ enum ScoreType {
   Fives = 5;
   Sixes = 6;
   Chance = 7;
-  FourOfAKind = 8;
-  FullHouse = 9;
-  SmallStraight = 10;
-  LargeStraight = 11;
-  Yahtzee = 12;
-  Bonus = 13;
+  ThreeOfAKind = 8;
+  FourOfAKind = 9;
+  FullHouse = 10;
+  SmallStraight = 11;
+  LargeStraight = 12;
+  Yahtzee = 13;
+  Bonus = 14;
 }
 
 enum Action {
@@ -66,6 +67,12 @@ enum Action {
   Roll = 1;
   Reroll = 2;
   Write = 3;
+}
+
+enum YahtzeeState {
+  NonSelected = 0;
+  Selected = 1;
+  Abondoned = 2;
 }
 
 message PartScore {
@@ -80,4 +87,7 @@ message GameStatus {
   repeated Action available_actions = 4;
   int32 score = 5;
   int32 turns = 6;
+  int32 upper_scores = 7;
+  int32 bottom_scores = 8;
+  int32 yahtzee_status = 9;
 }
