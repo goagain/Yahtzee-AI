@@ -1,106 +1,465 @@
-# Yahtzee-AI
-![](RackMultipart20210125-4-1n3m8hh_html_702c877122b73412.png)
+# Yahtzee Final Project Report
 
-# Yahtzee AI
+## Rui Tang
 
-based on searching
-
-Rui Tang, Sue Wang | Capstone Term I | 2020-10-20
-
-# Abstract
-
-Yahtzee is a popular dice game in North America. Many people regard Yahtzee as a lucky game. Absolutely it is, but with strategy and optimization we can get a higher score expect value. In this essay we would see how to use searching to find the maximum expected value and select the best option in each step.
-
-## Introduction of Yahtzee
-
-- **Yahtzee**  is a [dice game](https://en.wikipedia.org/wiki/Dice_game) made by [Milton Bradley](https://en.wikipedia.org/wiki/Milton_Bradley_Company) (now owned by [Hasbro](https://en.wikipedia.org/wiki/Hasbro)), which was first marketed as Yatzie by the National Association Service of [Toledo, Ohio](https://en.wikipedia.org/wiki/Toledo,_Ohio), in the early 1940s. It was marketed under the name of Yahtzee by game entrepreneur [Edwin S. Lowe](https://en.wikipedia.org/wiki/Edwin_S._Lowe) in 1956. The game is a development of earlier dice games such as [Poker Dice](https://en.wikipedia.org/wiki/Poker_Dice), [Yacht](https://en.wikipedia.org/wiki/Yacht_(dice_game)) and [Generala](https://en.wikipedia.org/wiki/Generala). It is also similar to [Yatzy](https://en.wikipedia.org/wiki/Yatzy), which is popular in [Scandinavia](https://en.wikipedia.org/wiki/Scandinavia).
-- The objective of the game is to score points by rolling five [dice](https://en.wikipedia.org/wiki/Dice) to make certain combinations. The dice can be rolled up to three times in a turn to try to make various scoring combinations and dice must remain in the box. A game consists of thirteen rounds. After each round the player chooses which scoring category is to be used for that round. Once a category has been used in the game, it cannot be used again. The scoring categories have varying point values, some of which are fixed values and others for which the score depends on the value of the dice. A Yahtzee is five-of-a-kind and scores 50 points, the highest of any category. The winner is the player who scores the most points.
-- Yahtzee was marketed by the E.S. Lowe Company from 1956 until 1973. In 1973, the [Milton Bradley Company](https://en.wikipedia.org/wiki/Milton_Bradley_Company) purchased the E.S. Lowe Company and assumed the rights to produce and sell Yahtzee. During Lowe&#39;s ownership over 40 million Yahtzee games were sold worldwide. According to current owner [Hasbro](https://en.wikipedia.org/wiki/Hasbro), 50 million Yahtzee games are sold each year. A classic edition is currently being marketed by [Winning Moves](https://en.wikipedia.org/wiki/Winning_Moves).
-# 1
-
-## Rules
-
-A classic Yahtzee game has 13 turns and 13 types of scores plus a bonus score. Each type of score must and only be selected once. In each turn, players can roll five dices and reroll up to two times. When rerolling, the player can keep any of dices at that moment and reroll the others. If players want to write the score onto the score board (or the reroll times used out), they should select one of the score type and calculate the corresponding score then record it. If the numerical score is higher than 63, a 35-score bonus will be earned.
-
-The detail rules show following:
-
-| **Categories** | **Descriptions** | **Scores** | **Examples** |
-| --- | --- | --- | --- |
-| **Aces** | Any combination | The sum of dice with the number 1 | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg) scores 3 |
-| **Twos** | Any combination | The sum of dice with the number 2 | [![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_7efe9775f3e99423.png)](https://en.wikipedia.org/wiki/File:Dice-6a.svg) scores 6 |
-| **Threes** | Any combination | The sum of dice with the number 3 | [![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg) scores 12 |
-| **Fours** | Any combination | The sum of dice with the number 4 | [![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 8 |
-| **Fives** | Any combination | The sum of dice with the number 5 | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 5 |
-| **Sixes** | Any combination | The sum of dice with the number 6 | [![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_7efe9775f3e99423.png)](https://en.wikipedia.org/wiki/File:Dice-6a.svg)[![](RackMultipart20210125-4-1n3m8hh_html_7efe9775f3e99423.png)](https://en.wikipedia.org/wiki/File:Dice-6a.svg)[![](RackMultipart20210125-4-1n3m8hh_html_7efe9775f3e99423.png)](https://en.wikipedia.org/wiki/File:Dice-6a.svg) scores 18 |
-| **Bonus** | If the sum of all numerical scores greater than or equals 63 | 35 |
- |
-| **Three Of A Kind** | At least three dice the same | Sum of all dice | [![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg) scores 17 |
-| **Four Of A Kind** | At least four dice the same | Sum of all dice | [![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 24 |
-| **Full House** | Three of one number and two of another | 25 | [![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 25 |
-| **Small Straight** | Four sequential dice
- (1-2-3-4, 2-3-4-5, or 3-4-5-6) | 30 | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg)[![](RackMultipart20210125-4-1n3m8hh_html_7efe9775f3e99423.png)](https://en.wikipedia.org/wiki/File:Dice-6a.svg) scores 30 |
-| **Large Straight** | Five sequential dice
- (1-2-3-4-5 or 2-3-4-5-6) | 40 | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_919481a48aaca209.png)](https://en.wikipedia.org/wiki/File:Dice-2.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_419d6102426cdf6c.png)](https://en.wikipedia.org/wiki/File:Dice-4.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 40 |
-| **Yahtzee** | All five dice the same | 50 | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg) scores 50 |
-| **Chance** | Any combination | Sum of all dice | [![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_928ab575bf83a7cb.png)](https://en.wikipedia.org/wiki/File:Dice-1.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_86f648d4e58c7e72.png)](https://en.wikipedia.org/wiki/File:Dice-3.svg)[![](RackMultipart20210125-4-1n3m8hh_html_b269f6144b00c815.png)](https://en.wikipedia.org/wiki/File:Dice-5.svg) scores 13 |
-
-## Modeling
-
-By observing the game process, we can find that in any situation, the score available for the player&#39;s remaining blanks depends only on which grids have been filled, and has no relationship with the scores in these filled grids (except for bonus points). Thus, we can extract this information from game states: which score types have been filled, the sum of numerical scores, the reroll times and current dices.
-
-## state space
-
-Before we implement the model, we need to estimate the state space, and judge whether it could be stored in storage.
-
-- The space of which scores have been used: We have 13 types of score, each one has two status: filled or not filled. The total space is
-- The range of numerical value: It could be from 0 to 126. Luckily, we only care about the values less than or equals 63. The space is 64.
-- Reroll times: only three options: 0, 1, 2. The space is 3.
-- The space of dices: There are 5 dices, each dice can be 1-6, and can be blank, for which is expected to reroll. Therefore, the total space is =16807
-
-Based on Cartesian product, the total space is =26435125248, approximately 26 Trillion. If each state uses 4 bytes, the total memory usage will be 92 GB, which is too huge.
-
-## Compress and Optimization
-
-In the above section we can see dices use too much space, but by observing we can find some dices with different order were regard as different like (1, 2, 3, 4, 5), (5, 4, 3, 2, 1) but they are same in different combination. By a simple process we can prove the total number of combinations for N dices with M sides is C (M+N-1, M-1). Regarding the dice has 7 sides (the extra for blank), we can easily calculate for 5 dices, the number is C (11, 6) =426. After this process, indexing these dices to number 0 to 425 is possible.
-
-After compressing, the state space will be =670040064, which is much smaller, and ideally the total memory usage will be 2.68 GB.
-
-For computers&#39; hardware, it is easy to do bit calculation but harder to do divide or mod operation. Also, if the state representation method is irrelevant, the program will be also hard to maintain and debug. For these reasons, we align these status codes by bit, and the final memory usage will be 4 GB.
-
-| Type | Bits | Max range |
-| --- | --- | --- |
-| Dices | 9 | 512 |
-| Filled state | 13 | 8192 |
-| Reroll times | 2 | 4 |
-| Numerical sum | 6 | 64 |
-| Total | 30 | 1073741824 |
+## Yingshu Wang
 
 
-## Algorithm and State transition
+## Executive Summary
 
-Based on the previous analysis, we can calculate the expected value which can be gained in remain steps. Firstly, we need to define border states.
+```
+In order to show the far-reaching significance of artificial intelligence that can
+```
+solve complex problems, our team decided to train AI to execute and train a North
 
--
-### Expected value for end game: 0, because we can do nothing
-- For blank dices: E=Average ({E(p)| p in all dices possibly})
-- For each step needs to decide: E = max(E(next) + score in this turn| next in all possible action))
+American dice game called Yahtzee. The reason for using this game is because its
 
-## Algorithm Impletement
+winning strategy does not come from a single element, but requires a combination of
 
-See the C++ project in attachment
+multiple factors to win the final victory. This is a good performance for training AI's
 
-## Data Analysis
+ability to solve problems.
 
-See the Jupyter Notebook.
+```
+Out of personal interest in this game and recognition of AI's problem-solving
+```
+ability, we will let AI play several consecutive games according to the rules and
 
-## TEAMWORK
+continue to let it learn, develop and refine strategies. The way to improve AI strategy
 
-### Rui Tang: Algorithm design, code, and report
+comes from data collection and processing. Then the AI will continue to learn and
 
-### Sue Wang: Data cleaning, analysis, and visualization
+improve its strategy in the Yahtzee game based on the data. We hope to finally see
 
-Resources:
+an objective win rate in this game.
 
-[https://github.com/goagain/Yahtzee-AI](https://github.com/goagain/Yahtzee-AI)
+```
+In the report, we will introduce our AI algorithm design, AI's requirements for
+```
+collected data, and the strategy of how to strengthen AI through data. Finally, the
 
-[1](#sdfootnote1anc) Wikipedia[https://en.wikipedia.org/wiki/Yahtzee](https://en.wikipedia.org/wiki/Yahtzee)
+results are used to explain the feasible methods and advantages of AI for solving
+
+complex problems.
+
+## Introduction
+
+```
+Yahtzee is a popular dice game in North America. The game is a
+```
+development of earlier dice games such as Poker Dice, Yacht and Generala. It is
+
+also similar to Yatzy, which is popular in Scandinavia. [1]
+
+```
+The objective of the game is to score points by rolling five dice to make
+```
+certain combinations. The dice can be rolled up to three times in a turn to try to make
+
+various scoring combinations and dice must remain in the box. A game consists of
+
+thirteen rounds. After each round the player chooses which scoring category is to be
+
+used for that round. Once a category has been used in the game, it cannot be used
+
+again. The scoring categories have varying point values, some of which are fixed
+
+values and others for which the score depends on the value of the dice. A Yahtzee is
+
+five-of-a-kind and scores 50 points, the highest of any category. The winner is the
+
+player who scores the most points.
+
+
+```
+A classic Yahtzee game has 13 turns and 13 types of scores plus a bonus
+```
+score. Each type of score must and only be selected once. In each turn, players can
+
+roll five dice and reroll up to two times. When rerolling, the player can keep any of
+
+the dice at that moment and reroll the others. If players want to write the score onto
+
+the scoreboard (or the reroll times used out), they should select one of the score
+
+types and calculate the corresponding score then record it. If the numerical score is
+
+higher than 63, a 35-score bonus will be earned.
+
+```
+In 2016, AlphaGo defeated the world Go champion Lee Sedol and shocked
+```
+the whole world. But the more far-reaching significance lies in it shows the possibility
+
+that Artificial Intelligence(AI) can solve complex problems. [2] Inspired by AlphaGo
+
+and based on our personal interests, our team decided to train a game AI. The
+
+widely-used models can be optimized and implemented into various types of games.
+
+```
+Many people regard Yahtzee as a lucky game. Yahtzee’s optimal winning
+```
+strategy is not immediately obvious. Few reports indicate there are not
+
+straightforward relationships between each factor. For example, Glenn, J. in his
+
+report named “An optimal strategy for Yahtzee” (2006) found that “the best strategy
+
+does not depend on what has been scored in each category” by simulating an
+
+extreme environment that has only one category, Yahtzee. They keep track of the
+
+expected score for remaining turns, finding the average score of the whole game is
+
+the average score of the rest game at the beginning’s state. He has identified an
+
+optimal strategy that maximizes the expected score. However, it’s not about
+
+enhancing the probability of winning. In this report, our solutions to maximum
+
+Yahtzee winning probability will be discussed.
+
+## Rational Statement
+
+```
+In the previous version, we built an AI based on simple search, which can get
+```
+the ideal expected value. This time we want to get the result with a self-learning
+
+function: QLearning, rather than a certain algorithm.
+
+## Problems
+
+We found and solved these problems in this project:
+
+
+1. We used many C++ STL features in the previous version. However, the usage
+
+```
+of STL is always with memory allocation and deallocation, which makes our
+```
+```
+program very slow. We abandoned STL features like map and vector, using C
+```
+```
+basic array structure instead.
+```
+2. To accelerate training speed, we used multi-thread to calculate. In
+
+```
+multi-thread programming, we found cache conflict influences the speed very
+```
+```
+much, so that we allocate independent memory for each thread.
+```
+3. The choice of coefficients in continuous training is very important. Too large
+
+```
+coefficients will cause the results to not converge, and too small coefficients
+```
+```
+will converge too slowly. In the end, we chose the exponential decay method.
+```
+## Data Requirements
+
+## Data
+
+```
+This section is a list of your data sources and data sets used for the
+```
+project. It also includes descriptions of what they are and where they’re located.
+
+```
+In this project, our models are self-driven. Like most reinforcement learning
+```
+projects, we programmed a Yahtzee game simulation, allowing the computer against
+
+the computer. All the computer’s operations are recorded, including the game ID, the
+
+number of turns, the player’s action, randomly generated five dice' numbers, the dice
+
+player kept, the player existing scores and the player’s expectation. We extract
+
+information from the environment and self-iterate to an optimal solution.
+
+```
+Assumption Constraint
+```
+```
+Detailed (Tracing all steps) can not 100% correctly simulate human
+```
+```
+behavior
+```
+```
+All data consist of the same range
+```
+```
+Data collected at one Standard
+```
+
+```
+Below is our data list:
+```
+- ​ **Game ID:** ​ the number of games
+- ​ **turn:** ​ the number of turns in one game. min 1, max 13
+- ​ **Dice:** ​random dices computer generated. For example,123 means having three
+
+dice, each dice have 1, 2, 3 points respectively
+
+- ​ **Action:** ​player's behavior, computer-generated
+- ​ **Written:** ​At the end of each turn, the category player chosen
+- ​ **Kept:** ​ The dice player keep
+- ​ **Score:** ​The player existing score
+- ​ **Expect:** ​It's computer-generated data. If the player feels lucky (has positive
+
+feedback from previous play), the expectation tends to be high.
+
+```
+● For blank dices: E=Average ({E(p)| p in all dices possibly})
+```
+```
+● Expected value for end game: 0, because we can do nothing
+```
+```
+● For each step needs to decide: E = max(E(next) + score in this turn| next
+```
+```
+in all possible action))
+```
+
+## Model/Architecture Approach.
+
+```
+In this project, our algorithm is taking advantage of QLearning. In the
+```
+previous project version, we turned out that the state space is very huge. Thus,
+
+we use a different way to calculate the QTable. Like the previous version, we
+
+defined the same data structure and initialized the QTable to 0(randomly
+
+initialization is also possible). After that, the algorithm can be presented as
+
+following:
+
+```
+a. For states whose dice have been rolled, find all the feasibility of the next
+```
+```
+state, and get the expected value. The expected value of this state is the
+```
+```
+maximum value from all the next states where the score gained plus the
+```
+```
+expected value of the next state.
+```
+```
+b. For states whose dice have not been rolled(where zeros inside), we
+```
+```
+randomly roll and get a new state. The current state’s expected value
+```
+```
+equals the next. To accelerate the calculation process and improve the
+```
+```
+precision, each time we roll multiple times as a batch. In this project, 16 is
+```
+```
+considered as a suitable batch size which is acceptable for stability and
+```
+```
+not too slow.
+```
+```
+c. Same as the previous project, the expected value of the final state is 0.
+```
+```
+After the above calculation process, we can get the new expected value of
+```
+each state. Although neither the old or new expected value is the ideal value, we
+
+use the following iteration to approach the ideal value:
+
+```
+Q ′= Q 1 earningRate ) earningRate
+*
+```
+```
+( − l + S
+*
+```
+```
+l
+```
+```
+Q is the last value in QTable
+```
+```
+Q’ is the renewed value in QTable
+```
+```
+S is the expected value in the current iteration
+```
+```
+A too-large learning rate will cause instability so that in the first epoch we
+```
+set the learning rate to 1 and each following epoch we set the learning rate to
+
+0.99 times the previous learning rate.
+
+
+```
+After 500 iterations, we get the model and it is very close to the ideal
+```
+QTable which we got in the previous project.
+
+```
+*The ideal expectation in each game is approximately 224.61.
+```
+## Project Work Breakdown
+
+**Rui:**
+
+```
+● Responsible for the design and writing of logic and algorithms in the Yahtzee
+```
+```
+game’s code
+```
+```
+● Responsible for the interpretation and result reporting of most algorithms in
+```
+```
+the report
+```
+```
+● Run the game to report the results and check the algorithm and comment
+```
+**Sue:**
+
+```
+● Run the program, report and collect the results, and perform data processing
+```
+```
+● Performing EDA based on the data given after running the program
+```
+```
+● Report most of the results and conclusions related to the data in the report
+```
+```
+● Assist game algorithm and programming work
+```
+
+## EDA
+
+1. Blue zones mean at that turn this score type was given up
+
+
+2. FullHouse, Yahtzee and LongStraight have a decreasing tendency as the
+
+```
+number of turns increases. The player tends to give up Yahtzee and
+```
+```
+LongStraight in the later turns.
+```
+**Others:**
+
+## Data Preprocessing pipeline
+
+```
+● importing data
+```
+
+```
+● data cleaning
+```
+Separating dive data For example, from 34612 to dice one is 3, dice 2 is 4 ...
+
+from string to int
+
+
+Originally, if the player hasn't chosen any dice to keep, the dice data shows zero.
+
+Now, we replace any zero value to NaN except the game id.
+
+## ​Algorithm Evaluation
+
+```
+In this project, we have used two types of algorithms.
+```
+```
+a) Memorized Simple Search
+```
+```
+b) QLearning
+```
+```
+Search QLearning
+```
+
+Pros 1. High precision
+
+2. Fast
+    1. easy to use multi thread
+    2. Algorithm is easy to
+
+```
+understand
+```
+Cons 1. Need to know the exact
+
+```
+process of the game,
+```
+```
+including the random
+```
+```
+process
+```
+2. Hard to pararell
+3. Model is very hude (4 GB)
+    1. Very slow. For 500
+
+```
+times iteration, 5 hours
+```
+```
+has been spent
+```
+2. Model is very hude
+
+### (4GB)
+
+
+## Final Inference
+
+```
+See in the C++ project. SimpleSearchAgent.cpp is for the memorized search
+```
+algorithm, and QAgent is for the QLearning algorithm.
+
+## Appendices
+
+[1] Yahtzee. (2020, November 16). Retrieved November 25, 2020, from
+
+https://en.wikipedia.org/wiki/Yahtzee
+
+[2] Vincent, J. (2019, November 27). Former Go champion beaten by DeepMind
+
+retires after declaring AI invincible. Retrieved November 25, 2020, from
+
+https://www.theverge.com/2019/11/27/20985260/ai-go-alphago-lee-se-dol-retired-de
+
+epmind-defea
+
+[3] Glenn, J. 2006. An optimal strategy for Yahtzee. Loyola College in Maryland,
+
+Tech. Rep. CS-TR-0002.
+
+
